@@ -6,6 +6,7 @@
   height: 40vmin;
   pointer-events: none;
 }
+@import 'bootstrap/dist/css/bootstrap.css';
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
