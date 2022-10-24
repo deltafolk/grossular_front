@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg4225" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" inkscape:export-xdpi="90" inkscape:export-ydpi="90" inkscape:version="0.91 r13725" sodipodi:docname="spritesheet.svg" inkscape:export-filename="/home/fpuga/development/upstream/icarto.Leaflet.draw/src/images/spritesheet-2x.png"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="50px" height="50px"
+	 viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+<g id="enabled">
+	<g id="polyline">
+		<path id="path4229" inkscape:connector-curvature="0" fill="#464646" d="M6.625,34.98v9.187h9.187V34.98H6.625z M12.75,41.105
+			H9.688v-3.064h3.062V41.105z"/>
+		<path id="path4231" inkscape:connector-curvature="0" fill="#464646" d="M34.189,7.417v9.188h9.186V7.417H34.189z M40.312,13.542
+			H37.25v-3.062h3.062V13.542z"/>
+		<path id="path4233" inkscape:connector-curvature="0" fill="#464646" d="M14.5,39.796L11,36.29l24.5-24.499L39,15.29L14.5,39.796z
+			"/>
+	</g>
+</g>
+</svg>

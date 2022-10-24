@@ -8,6 +8,12 @@
 }
 @import 'bootstrap/dist/css/bootstrap.css';
 
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400&display=swap');
+
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css');
+
+@import url('https://unpkg.com/leaflet@1.9.2/dist/leaflet.css');
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -36,4 +42,21 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+* {
+  font-family: 'Prompt', sans-serif;
+}
+
+.overflow_ {
+  height:450px;
+  overflow-y: scroll;
+}
+
+.footer{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }

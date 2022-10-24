@@ -1,58 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 import './App.css';
 import axios from 'axios';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import Button1 from 'react-bootstrap/Button';
+import Form1 from 'react-bootstrap/Form';
+
+import Login from './component/Login';
+import Header from './component/Header';
+import Item from './component/Item';
+import Err404 from './component/Err404';
+import Footer from './component/Footer';
+
+import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Router, Route, Link, Routes } from 'react-router-dom';
+import { browserHistory } from 'react-router';
+
+import bg from './images/bg01.jpg';
 
 let mainURL = 'http://localhost:7000';
 let loginURL = 'http://localhost:7000/loginresult';
 
 function App() {
 
-  let [post, setPost] = useState(null);
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
-
-
-  useEffect(()=>{
-    axios.get(mainURL).then((res) => {
-      setPost(res.data);
-      console.log(res.data);
-    })
-  }, []);
-
-  function getPost(){
-    axios.post(loginURL, {
-      username,
-      password
+  function bgcolor() {
+    const token = localStorage.getItem('token');
+    if (!token){
+      return ({ backgroundImage: "url('./images/bg01.jpg')", height: '100vh' });
+    } else {
+      return ({ backgroundColor: "#EEEEEE", height: '100vh' });;
     }
-    ).then((res) => {
-      setPost(res.data)
-      console.log(res.data);
-    })
   }
 
-  if (!post) return "null";
 
   return (
-    <div className="App">
-      <h1>TITLE : {post.title}{post.off}</h1>
-      
-      <Form>
-        <Form.Group className="mb-3 px-5">
-        <p>Username</p>
-          <Form.Control type="email" placeholder="Enter Username" onChange={e => setUserName(e.target.value)}/>
-        </Form.Group>
+    <div style ={ bgcolor() }>
+      <Header />
+      <Routes>
+          <Route path="/" element={<Login/>} />
 
-        <Form.Group className="mb-3 px-5" controlId="formBasicPassword">
-          <p>Password</p>
-          <Form.Control type="password" placeholder="Enter Password" onChange={e => setPassword(e.target.value)}/>
-        </Form.Group>
+          <Route path="/item" element={<Item data='testtest' keyx='12345'/>} />
 
-        <Button onClick={getPost} variant='primary'>
-          Submit
-        </Button>
-      </Form>
+          <Route path="*" element={<Err404/>} />
+      </Routes>
+      <Footer />
     </div>
   );
 }
