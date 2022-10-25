@@ -26,7 +26,7 @@ function App() {
     if (!token){
       return ({ backgroundImage: "url('./images/bg01.jpg')", height: '100vh' });
     } else {
-      return ({ backgroundColor: "#EEEEEE", height: '100vh' });;
+      return ({ backgroundColor: "#EEEEEE", height: '100%' });;
     }
   }
 

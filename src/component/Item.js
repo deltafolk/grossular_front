@@ -8,6 +8,10 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { MapContainer  } from 'react-leaflet/MapContainer'
 import { TileLayer  } from 'react-leaflet/TileLayer'
 import { GeoJSON } from 'react-leaflet/GeoJSON'
+import { Circle } from 'react-leaflet/Circle';
+import { useMap } from 'react-leaflet/hooks'
+//import { L } from 'leaflet'
+import bbox from 'geojson-bbox';
 
 let itemURL = 'http://localhost:7000/item';
 
@@ -20,25 +24,6 @@ function Item(props){
     let [post, setPost] = useState([{}]);
     const [isLoading, setLoading] = useState(true);
 
-    let testx ={
-        "type": "FeatureCollection",
-        "name": "testpoly",
-        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-        "features": [
-        { "type": "Feature", "properties": { "id": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 100.737115, 18.724892 ], [ 100.739105, 18.722143 ], [ 100.740841, 18.725832 ], [ 100.744096, 18.722721 ], [ 100.742867, 18.71867 ], [ 100.738454, 18.719285 ], [ 100.73632, 18.722107 ], [ 100.737115, 18.724892 ] ] ] ] } },
-        { "type": "Feature", "properties": { "id": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 100.73755, 18.718236 ], [ 100.74265, 18.718092 ], [ 100.74482, 18.718453 ], [ 100.745073, 18.715162 ], [ 100.742505, 18.713173 ], [ 100.738273, 18.713173 ], [ 100.737622, 18.716826 ], [ 100.73755, 18.718236 ] ] ] ] } }
-        ]
-        };
-
-    let testy = {
-        "type": "FeatureCollection",
-        "name": "testpoly",
-        "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-        "features": [
-        { "type": "Feature", "properties": { "id": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 100.837021517967216, 18.760826071406573 ], [ 100.839011517967208, 18.758077071406571 ], [ 100.840747517967216, 18.761766071406573 ], [ 100.844002517967212, 18.758655071406572 ], [ 100.842773517967217, 18.754604071406572 ], [ 100.838360517967217, 18.755219071406572 ], [ 100.836226517967219, 18.758041071406574 ], [ 100.837021517967216, 18.760826071406573 ] ] ] ] } },
-        { "type": "Feature", "properties": { "id": null }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 100.837456517967212, 18.754170071406573 ], [ 100.842556517967211, 18.754026071406571 ], [ 100.844726517967217, 18.754387071406573 ], [ 100.844979517967218, 18.751096071406572 ], [ 100.842411517967207, 18.749107071406574 ], [ 100.83817951796722, 18.749107071406574 ], [ 100.837528517967215, 18.752760071406573 ], [ 100.837456517967212, 18.754170071406573 ] ] ] ] } }
-        ]
-        };
 
     useEffect(()=>{
         axios.post(itemURL, {
@@ -80,8 +65,18 @@ function Item(props){
         }
     }
 
-    function removeBackSlash(input){
-        return input.replace(/\\/g, "");
+    function geoJSON2Circle (json){
+        let jsonx = JSON.parse(json.jsondata);
+        console.log(jsonx.features[0].geometry.coordinates[1])
+        return (
+
+                <Circle
+                key={uuidv4()}
+                center={[jsonx.features[0].geometry.coordinates[1], jsonx.features[0].geometry.coordinates[0]]}
+                pathOptions={setColor(json.color)}
+                radius= '10.0'
+                />
+        )
     }
 
     function MenuX() {
@@ -103,12 +98,77 @@ function Item(props){
             <Dropdown.Item eventKey="7">ดาวน์โหลด KML</Dropdown.Item>
           </DropdownButton>
         );
-    }                            
+    }    
+    
+    function setColor(input){
+        return {color: input, weight: '15.0', opacity: 1,fillOpacity: 0.5,interactive: true, fillColor: input};
+    }
+
+    
+
+    function MapComponent(props) {
+
+        //const [bounds, setBounds] = useState(props.data.jsondata)
+        const map = useMap()
+
+        
+        var featurex = JSON.parse(props.data.jsondata);
+        
+
+        let xx = (bbox(featurex))
+
+        let yy = ([[xx[1], xx[0]] , [xx[3], xx[2]]])
 
 
-    //post = [{off:'น้ำงาว',offkey:'12345'},{off:'น้ำเลียบ',offkey:'8888'},{off:'น้ำขว้าง',offkey:'0000'}];
+        map.fitBounds([yy]);
 
-    //let {data,keyx} = props;
+/*         function SetBoundsRectangles() {
+            const [bounds, setBounds] = useState(outerBounds)
+            const map = useMap()
+          
+            const outerHandlers = useMemo(
+              () => ({
+                click() {
+                  setBounds(outerBounds)
+                  map.fitBounds(outerBounds)
+                },
+              }),
+              [map],
+            )
+          
+            return (
+              <>
+                <Rectangle
+                  bounds={outerBounds}
+                  eventHandlers={outerHandlers}
+                  pathOptions={bounds === outerBounds ?}
+                />
+              </>
+            )
+        } */
+          
+
+
+        let post = JSON.parse(props.data.jsondata);
+            if (props.data.type != 'point') {
+            return (
+                <GeoJSON 
+                    key={uuidv4()}
+                    data={[post]}
+                    style={setColor(props.data.color)}
+                />
+            ) } else {
+                return (
+                    <Circle
+                    key={uuidv4()}
+                    center={[post.features[0].geometry.coordinates[1], post.features[0].geometry.coordinates[0]]}
+                    pathOptions={setColor(props.data.color)}
+                    radius= '10.0'
+                    />
+                ) 
+            }
+    }
+
 
     if (isLoading) {
         return <div className="m-5 text-center h5">กรุณารอสักครุ่...</div>;
@@ -133,15 +193,10 @@ function Item(props){
                                 attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
-
-                            {post.map((listx)=>{
-                                //console.log((listx.jsondata))
+                            {post.map((list)=>{
+                                //console.log(list.jsondata);
                                 return (
-                                    <GeoJSON 
-                                        key={uuidv4()}
-                                        data={[JSON.parse(listx.jsondata)]}
-                                        style={{color:'red',weight: '15.0'}}
-                                    />
+                                    <MapComponent data={(list)} key={uuidv4()}/>
                                 )
                             })}
 
@@ -162,8 +217,8 @@ function Item(props){
                                     {post.map((list)=>{
                                         //console.log((post))
                                         return (
-                                            <tr key = {uuidv4()}>
-                                            <td> <i className="fa fa-circle" style={{color:ranColor()}} /></td>
+                                            <tr key = {uuidv4()} onClick={console.log('555')}>
+                                            <td> <i className="fa fa-circle" style={setColor(list.color)} /></td>
                                             <td> {list.offname} </td>
                                             <td> {checkType(list.type)} {list.actname} {list.amount} {checkTypeUnit(list.type)}</td>
                                             <td> {list.date} </td>
