@@ -9,6 +9,7 @@ import Header from './component/Header';
 import Item from './component/Item';
 import Err404 from './component/Err404';
 import Footer from './component/Footer';
+import New from './component/New';
 
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Router, Route, Link, Routes } from 'react-router-dom';
@@ -38,6 +39,8 @@ function App() {
           <Route path="/" element={<Login/>} />
 
           <Route path="/item" element={<Item data='testtest' keyx='12345'/>} />
+
+          <Route path="/new" element={<New data='testtest' keyx='12345'/>} />
 
           <Route path="*" element={<Err404/>} />
       </Routes>

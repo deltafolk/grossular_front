@@ -38,13 +38,6 @@ function Item(props){
     }, []);
 
 
-    let colorArr = [];
-    function ranColor(){
-        let rann = Math.floor(Math.random()*16777215).toString(16);
-        colorArr.push('#'+rann);
-        return '#' + rann
-    }
-
     function checkType(input){
         if (input == 'point'){
             return <img src='images/point.png' height='20px' width='20px' />
@@ -104,23 +97,19 @@ function Item(props){
         return {color: input, weight: '15.0', opacity: 1,fillOpacity: 0.5,interactive: true, fillColor: input};
     }
 
-    
+    function Test(input){
+        const map = useMap()
+        var featurex = JSON.parse(input.data.jsondata);
+        let xx = (bbox(featurex))
+        let yy = ([[xx[1], xx[0]] , [xx[3], xx[2]]])
+        map.fitBounds([yy]);
+    }
 
     function MapComponent(props) {
 
         //const [bounds, setBounds] = useState(props.data.jsondata)
-        const map = useMap()
-
-        
-        var featurex = JSON.parse(props.data.jsondata);
-        
-
-        let xx = (bbox(featurex))
-
-        let yy = ([[xx[1], xx[0]] , [xx[3], xx[2]]])
 
 
-        map.fitBounds([yy]);
 
 /*         function SetBoundsRectangles() {
             const [bounds, setBounds] = useState(outerBounds)
@@ -171,7 +160,12 @@ function Item(props){
 
 
     if (isLoading) {
-        return <div className="m-5 text-center h5">กรุณารอสักครุ่...</div>;
+        return (
+        <div className='pt-5'>
+        <center><div class="loader"></div></center>
+        <div style={{backgroundColor: "#EEEEEE", height: '100vh'}} className="m-3 text-center h5">กรุณารอสักครุ่...</div>
+        </div>
+        )
       } 
     
     else {
