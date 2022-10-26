@@ -4,6 +4,8 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2'
+import { v4 as uuidv4 } from 'uuid';
+import Edit from './Edit';
 
 let newURL = 'http://localhost:7000/new';
 
@@ -21,6 +23,21 @@ function New(){
     const offkey = localStorage.getItem('offkey');
     const offname = localStorage.getItem('offname');
 
+
+    const [f_off, setF_off] = useState('');
+    const [f_act, setF_act] = useState('');
+    const [f_year, setF_year] = useState('');
+    const [f_amount, setF_amount] = useState('');
+    const [f_note, setF_note] = useState('');
+
+    const [f_obj, setF_obj] = useState({});
+
+    function setF_objx(a,b,c,d,e){
+       setF_obj({off: "123"})
+    }
+
+    console.log(f_obj)
+
     useEffect(()=>{
         axios.post(newURL, {
             username,
@@ -33,11 +50,26 @@ function New(){
         })
     }, []);
 
+
+
+    function checkBtn()
+    { 
+        if (f_off != '' && f_act != '' && f_year != '' && f_amount != '' && f_amount > 0){
+            setF_objx()
+            console.log(f_obj)
+            return false
+        } else {
+            return true
+        }
+    }
+
+    
+
     if (isLoading) {
         return (
             <div className='pt-5'>
-            <center><div class="loader"></div></center>
-            <div style={{backgroundColor: "#EEEEEE", height: '100vh'}} className="m-3 text-center h5">กรุณารอสักครุ่...</div>
+            <center><div className="loader"></div></center>
+            <div className="m-3 text-center h5">กรุณารอสักครุ่...</div>
             </div>
             )
     } 
@@ -81,11 +113,12 @@ function New(){
                             <Form>
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                                <select className='form-select'>
+                                <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.off.map((list)=>{
 
                                     return (
-                                        <option value={list.loginkey}>{list.off}</option>
+                                        <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
                                     )
                                     })}
                                 </select>
@@ -93,11 +126,12 @@ function New(){
                     
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                                <select className='form-select'>
+                                <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.act.map((list)=>{
                                         if (list.acttype == 'point') {
                                             return (
-                                                <option value={list.actkey}>{list.actname}</option>
+                                                <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
                                             )
                                         } else {
 
@@ -108,10 +142,11 @@ function New(){
 
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                                <select className='form-select'>
+                                <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                                    <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.year.map((list)=>{
                                         return (
-                                            <option value={list}>{list}</option>
+                                            <option key={uuidv4()} value={list}>{list}</option>
                                         )
                                     })}
                                 </select>
@@ -119,21 +154,21 @@ function New(){
 
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">จำนวนตามงบประมาณที่ได้รับ (แห่ง)</span></div>
-                                <Form.Control type="number" />
+                                <Form.Control onChange={e => setF_amount(e.target.value)} type="number" />
                             </Form.Group>
 
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">หมายเหตุ</span></div>
-                                <input className='form-control' type="text" maxLength="50"/>
+                                <input onChange={e => setF_note(e.target.value)} className='form-control' type="text" maxLength="50"/>
                             </Form.Group>
                     
                             <div className='my-4 px-2 text-center'>
                             <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
                                 ย้อนกลับ
                             </button>
-                            <button className='btn btn-primary mx-1' onClick={null}>
+                            <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                                 ถัดไป
-                            </button>
+                            </Button>
                             </div>
 
                             </Form>
@@ -154,11 +189,12 @@ function New(){
                         <Form>
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                            <select className='form-select'>
+                        <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.off.map((list)=>{
 
                                 return (
-                                    <option value={list.loginkey}>{list.off}</option>
+                                    <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
                                 )
                                 })}
                             </select>
@@ -166,11 +202,12 @@ function New(){
                 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                            <select className='form-select'>
+                        <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.act.map((list)=>{
                                     if (list.acttype == 'line') {
                                         return (
-                                            <option value={list.actkey}>{list.actname}</option>
+                                            <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
                                         )
                                     } else {
 
@@ -181,10 +218,11 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                            <select className='form-select'>
+                        <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                                    <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.year.map((list)=>{
                                     return (
-                                        <option value={list}>{list}</option>
+                                        <option key={uuidv4()} value={list}>{list}</option>
                                     )
                                 })}
                             </select>
@@ -204,9 +242,9 @@ function New(){
                         <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
                             ย้อนกลับ
                         </button>
-                        <button className='btn btn-primary mx-1' onClick={null}>
+                        <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                             ถัดไป
-                        </button>
+                        </Button>
                         </div>
 
                         </Form>
@@ -227,11 +265,12 @@ function New(){
                         <Form>
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                            <select className='form-select'>
+                        <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.off.map((list)=>{
 
                                 return (
-                                    <option value={list.loginkey}>{list.off}</option>
+                                    <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
                                 )
                                 })}
                             </select>
@@ -239,11 +278,12 @@ function New(){
                 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                            <select className='form-select'>
+                        <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.act.map((list)=>{
                                     if (list.acttype == 'polygon') {
                                         return (
-                                            <option value={list.actkey}>{list.actname}</option>
+                                            <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
                                         )
                                     } else {
 
@@ -254,10 +294,11 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                            <select className='form-select'>
+                        <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                                <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.year.map((list)=>{
                                     return (
-                                        <option value={list}>{list}</option>
+                                        <option key={uuidv4()} value={list}>{list}</option>
                                     )
                                 })}
                             </select>
@@ -277,9 +318,9 @@ function New(){
                         <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
                             ย้อนกลับ
                         </button>
-                        <button className='btn btn-primary mx-1' onClick={null}>
+                        <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                             ถัดไป
-                        </button>
+                        </Button>
                         </div>
 
                         </Form>
@@ -288,8 +329,11 @@ function New(){
                 </div>
             </div>
             )
-        } else {
+        } else if (choose == 'upload') {
             return <div>upload shape</div>
+        } else if (choose == 'editable') {
+            console.log(JSON.stringify(f_obj)+"dfdgasgsg")
+            return (<Edit data={f_obj}/>)
         }
 
     } 
