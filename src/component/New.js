@@ -30,13 +30,25 @@ function New(){
     const [f_amount, setF_amount] = useState('');
     const [f_note, setF_note] = useState('');
 
-    const [f_obj, setF_obj] = useState({});
-
-    function setF_objx(a,b,c,d,e){
-       setF_obj({off: "123"})
+    function getOff(){
+        return f_off
+    }
+    function getAct(){
+        return f_act
+    }
+    function getYear(){
+        return f_year
     }
 
-    console.log(f_obj)
+
+
+    let f_obj = {};
+
+    //const [f_obj, setF_obj] = useState({});
+
+
+
+    console.log(f_off, f_act, f_year, f_amount, f_note)
 
     useEffect(()=>{
         axios.post(newURL, {
@@ -55,8 +67,6 @@ function New(){
     function checkBtn()
     { 
         if (f_off != '' && f_act != '' && f_year != '' && f_amount != '' && f_amount > 0){
-            setF_objx()
-            console.log(f_obj)
             return false
         } else {
             return true
@@ -78,6 +88,7 @@ function New(){
 
     if(token) {
         if (choose == 'null') {
+
             return (
                         <div>
                             <div className="container d-flex justify-content-center mt-4" style={{display:'none'}}>
@@ -113,12 +124,12 @@ function New(){
                             <Form>
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                                <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                                <select value={getOff()} onChange={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.off.map((list)=>{
 
                                     return (
-                                        <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
+                                        <option key={uuidv4()} value={[list.loginkey, list.off]}>{list.off}</option>
                                     )
                                     })}
                                 </select>
@@ -126,12 +137,12 @@ function New(){
                     
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                                <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                                <select value={getAct()} onChange={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.act.map((list)=>{
                                         if (list.acttype == 'point') {
                                             return (
-                                                <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
+                                                <option key={uuidv4()} value={[list.actkey,list.actname, list.acttype]}>{list.actname}</option>
                                             )
                                         } else {
 
@@ -142,7 +153,7 @@ function New(){
 
                             <Form.Group className="input-group my-4 px-2">
                             <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                                <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                                <select value={getYear()} onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
                                     <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                     {post.year.map((list)=>{
                                         return (
@@ -163,9 +174,6 @@ function New(){
                             </Form.Group>
                     
                             <div className='my-4 px-2 text-center'>
-                            <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
-                                ย้อนกลับ
-                            </button>
                             <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                                 ถัดไป
                             </Button>
@@ -189,12 +197,12 @@ function New(){
                         <Form>
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                        <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getOff()} onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.off.map((list)=>{
 
                                 return (
-                                    <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
+                                    <option key={uuidv4()} value={[list.loginkey, list.off]}>{list.off}</option>
                                 )
                                 })}
                             </select>
@@ -202,12 +210,12 @@ function New(){
                 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                        <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getAct()} onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.act.map((list)=>{
                                     if (list.acttype == 'line') {
                                         return (
-                                            <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
+                                            <option key={uuidv4()} value={[list.actkey,list.actname, list.acttype]}>{list.actname}</option>
                                         )
                                     } else {
 
@@ -218,7 +226,7 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                        <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getYear()} onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
                                     <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.year.map((list)=>{
                                     return (
@@ -230,18 +238,16 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">จำนวนตามงบประมาณที่ได้รับ (กิโลเมตร)</span></div>
-                            <Form.Control type="number" />
+                            <Form.Control onChange={e => setF_amount(e.target.value)} type="number" />
                         </Form.Group>
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">หมายเหตุ</span></div>
-                            <input className='form-control' type="text" maxLength="50"/>
+                            <input onChange={e => setF_note(e.target.value)} className='form-control' type="text" maxLength="50"/>
                         </Form.Group>
                 
                         <div className='my-4 px-2 text-center'>
-                        <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
-                            ย้อนกลับ
-                        </button>
+
                         <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                             ถัดไป
                         </Button>
@@ -265,12 +271,12 @@ function New(){
                         <Form>
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อหน่วยงาน</span></div>
-                        <select onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getOff()} onInput={e => setF_off(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.off.map((list)=>{
 
                                 return (
-                                    <option key={uuidv4()} value={list.loginkey}>{list.off}</option>
+                                    <option key={uuidv4()} value={[list.loginkey, list.off]}>{list.off}</option>
                                 )
                                 })}
                             </select>
@@ -278,12 +284,12 @@ function New(){
                 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ชื่อกิจกรรม</span></div>
-                        <select onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getAct()} onInput={e => setF_act(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.act.map((list)=>{
                                     if (list.acttype == 'polygon') {
                                         return (
-                                            <option key={uuidv4()} value={list.actkey}>{list.actname}</option>
+                                            <option key={uuidv4()} value={[list.actkey,list.actname, list.acttype]}>{list.actname}</option>
                                         )
                                     } else {
 
@@ -294,7 +300,7 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">ปีงบประมาณ พ.ศ.</span></div>
-                        <select onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
+                        <select value={getYear()} onChange={e => setF_year(e.target.value)} className='form-select' defaultValue={''}>
                                 <option value="" disabled hidden>--- กรุณาเลือก ---</option>
                                 {post.year.map((list)=>{
                                     return (
@@ -306,18 +312,16 @@ function New(){
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">จำนวนตามงบประมาณที่ได้รับ (ไร่)</span></div>
-                            <Form.Control type="number" />
+                            <Form.Control onChange={e => setF_amount(e.target.value)} type="number" />
                         </Form.Group>
 
                         <Form.Group className="input-group my-4 px-2">
                         <div className="input-group-prepend"><span className="input-group-text">หมายเหตุ</span></div>
-                            <input className='form-control' type="text" maxLength="50"/>
+                            <input onChange={e => setF_note(e.target.value)} className='form-control' type="text" maxLength="50"/>
                         </Form.Group>
                 
                         <div className='my-4 px-2 text-center'>
-                        <button className='btn btn-secondary mx-1' onClick={()=>setChoose('null')}>
-                            ย้อนกลับ
-                        </button>
+
                         <Button className='btn btn-primary mx-1' disabled={checkBtn()} onClick={()=>setChoose('editable')}>
                             ถัดไป
                         </Button>
@@ -332,7 +336,16 @@ function New(){
         } else if (choose == 'upload') {
             return <div>upload shape</div>
         } else if (choose == 'editable') {
-            console.log(JSON.stringify(f_obj)+"dfdgasgsg")
+
+            f_obj = {
+                off: f_off,
+                act: f_act,
+                year: f_year,
+                amount: f_amount,
+                note: f_note
+            }
+
+            console.log(f_obj)
             return (<Edit data={f_obj}/>)
         }
 
