@@ -8,6 +8,8 @@ import Swal from 'sweetalert2'
 let editURL = 'http://localhost:7000/edit';
 let addURL = 'http://localhost:7000/add_data';
 
+let jsondata = 'n/a';
+
 function Edit(props) {
 
     const token = localStorage.getItem('token');
@@ -27,7 +29,6 @@ function Edit(props) {
 
     let amount = props.data.amount;
     let note = props.data.note;
-    const [jsondata, setJsondata] = useState('n/a')
 
     useEffect(()=>{
         axios.post(editURL, {
@@ -42,11 +43,11 @@ function Edit(props) {
 
     const addJSON = (input)=>{
         console.log("ข้อมูล -> ",input);
-        setJsondata(input)
+        jsondata = (input)
     }
 
     function addToDB(){
-        axios.put('http://localhost:7000/add_data', {
+        axios.put(addURL, {
             token,
             offkey,
             offname,
@@ -84,6 +85,54 @@ function Edit(props) {
         })
     }
 
+    function confirmAdd(){
+        Swal.fire({
+            title: 'บันทึกข้อมูล',
+            text: "ข้อมูลจะถูกตรวจสอบการทับซ้อน และบันทึกไปยังฐานข้อมูล ต้องการดำเนินการต่อหรือไม่",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#4285F4',
+            cancelButtonColor: '#555555',
+            cancelButtonText: 'แก้ไขต่อ',
+            confirmButtonText: 'บันทึก'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                addToDB()
+              )
+            }
+          })
+    }
+
+    function cancelAdd(){
+        Swal.fire({
+            title: 'ทิ้งข้อมูลนี้',
+            text: "ข้อมูลทั้งหมดจะไม่ถูกบันทึก ต้องการดำเนินการต่อหรือไม่",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#CC0000',
+            cancelButtonColor: '#555555',
+            cancelButtonText: 'แก้ไขต่อ',
+            confirmButtonText: 'ทิ้งข้อมูล'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                window.location.href = '/'
+              )
+            }
+          })
+    }
+
+    function checkTypeUnit(input){
+        if (input == 'point'){
+            return "จุด"
+        } else if (input == 'line') {
+            return "กม."
+        } else {
+            return "ไร่"
+        }
+    }
+
     if (isLoading) {
         return (
             <div className='pt-5'>
@@ -94,22 +143,22 @@ function Edit(props) {
     } else {
         return (
             <div>
-            <div className='px-3'>
+            <div className='px-3 pb-1'>
                 <div className="row">
                     <div className="col-8 text-start px-2 m-0">
                         <div className='text-start pt-0'>
-                            <div>{actname} ปี พ.ศ. {year} จำนวน {amount} | <b><u>{offname}</u></b> <a onClick={()=>{alert("test")}} className='btn btn-danger px-3 py-1 my-1'>รายการซ้อนทับ</a>
+                            <div>{actname} ปี พ.ศ. {year} จำนวน {amount} {checkTypeUnit(acttype)}| <b><u>{offname}</u></b> <a onClick={()=>{alert("test")}} className='btn btn-danger px-3 py-1 my-1'>รายการซ้อนทับ</a>
                             </div>
                         </div>
                     </div>
                     <div className="col-4 text-end px-2 pt-0 m-0">
-                        <span>จำนวนที่คำนวณได้ - <a onClick={()=>{addToDB()}} className='btn btn-primary px-3 py-1 my-1'>บันทึก</a> <a onClick={()=>{window.location.href = '/'}} className='btn btn-secondary px-3 py-1 my-1'>ยกเลิก</a>
+                        <span>จำนวนที่คำนวณได้ - {checkTypeUnit(acttype)} <a onClick={()=>{confirmAdd()}} className='btn btn-primary px-3 py-1 my-1'>บันทึก</a> <a onClick={()=>{cancelAdd()}} className='btn btn-secondary px-3 py-1 my-1'>ยกเลิก</a>
                         </span>
                     </div>
-                    <EditMap maindb={post} onAddJSON={addJSON}></EditMap>
+
                 </div>
             </div>
-            
+            <EditMap maindb={post} onAddJSON={addJSON} type={acttype}></EditMap>
             </div>
         )
     }

@@ -12,8 +12,10 @@ import { Circle } from 'react-leaflet/Circle';
 import { useMap } from 'react-leaflet/hooks'
 //import { L } from 'leaflet'
 import bbox from 'geojson-bbox';
+import Swal from 'sweetalert2'
 
 let itemURL = 'http://localhost:7000/item';
+let deleteURL = 'http://localhost:7000/delete';
 
 function Item(props){
 
@@ -36,6 +38,62 @@ function Item(props){
             //console.log(res.data);
         })
     }, []);
+
+
+    function deleteItem(idkey){
+        axios.delete(deleteURL, {
+            headers: {
+                Authorization: token
+              },
+              data: {
+                token,
+                idkey
+              }
+          }
+          ).then((res) => {
+            //setPost(res.data)
+            //setLoading(false);
+            console.log(res.data);
+            if (res.data.title == 'deleted'){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ลบข้อมูลแล้ว',
+                    showConfirmButton: false,
+                    timer: 1500
+                  }).then(()=>{
+                    window.location.href = '/item'
+                  })
+            } else {
+                Swal.fire({
+                    title: 'ลบข้อมูลล้มเหลว',
+                    text: 'มีบางอย่างผิดพลาด กรุณาแจ้งศูนย์ภูมิสารสนเทศฯ',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                  }).then(()=>{
+                    window.location.href = '/item'
+                  })
+            }
+        })
+    }
+
+    function confirmDelete(idkey){
+        Swal.fire({
+            title: 'ลบข้อมูลนี้',
+            text: "ข้อมูลจะถูกลบ ต้องการดำเนินการต่อหรือไม่",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#CC0000',
+            cancelButtonColor: '#555555',
+            cancelButtonText: 'ยกเลิก',
+            confirmButtonText: 'ลบ'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                deleteItem(idkey)
+              )
+            }
+          })
+    }
 
 
     function checkType(input){
@@ -72,7 +130,7 @@ function Item(props){
         )
     }
 
-    function MenuX() {
+    function MenuX(idkey) {
         return (
           <DropdownButton className='p-0 m-0'
             align="end"
@@ -82,7 +140,7 @@ function Item(props){
           >
             <Dropdown.Item eventKey="1">สร้างแผนที่ (A4)</Dropdown.Item>
             <Dropdown.Item eventKey="2">แก้ไข</Dropdown.Item>
-            <Dropdown.Item eventKey="3">ลบ</Dropdown.Item>
+            <Dropdown.Item eventKey="3" onClick={()=>{confirmDelete(idkey)}}>ลบ</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item eventKey="4">ข้อมูลค่าพิกัด</Dropdown.Item>
             <Dropdown.Item eventKey="5">ข้อมูลเชิงพื้นที่</Dropdown.Item>
@@ -217,7 +275,7 @@ function Item(props){
                                             <td> {checkType(list.type)} {list.actname} {list.amount} {checkTypeUnit(list.type)}</td>
                                             <td> {list.date} </td>
                                             <td> {list.note} </td>
-                                            <td className='text-center'> {MenuX()} </td>
+                                            <td className='text-center'> {MenuX(list.idkey)} </td>
                                             </tr>
                                         )
                                     })}

@@ -21,6 +21,7 @@ function EditMap(props){
             }
         )
     }
+    let type = props.type;
 
     const [arrJSON, setarrJSON] = useState([])
 
@@ -102,6 +103,34 @@ function EditMap(props){
         console.log("_onDrawStart", e);
       };
 
+      function checkTools(input){
+        if (input == 'point'){
+            return {
+              rectangle: false,
+              circle: false,
+              circlemarker: false,
+              polyline: false,
+              polygon: false
+            }
+        } else if (input == 'line') {
+            return {
+              rectangle: false,
+              circle: false,
+              circlemarker: false,
+              marker: false,
+              polygon: false
+            }
+        } else {
+            return {
+              rectangle: false,
+              circle: false,
+              circlemarker: false,
+              polyline: false,
+              marker: false
+            }
+        }
+      }
+
 
       function MapComponent(props) {
 
@@ -135,6 +164,16 @@ function EditMap(props){
         return {color: input, weight: '2.0', opacity: 1,fillOpacity: 0.5,interactive: true, fillColor: input};
     }
 
+    function checkTypeSymbol(input){
+        if (input == 'point'){
+            return "&#9679 "
+        } else if (input == 'line') {
+            return "&#x29DF "
+        } else {
+            return "&#11040 "
+        }
+    }
+
     return (
         <div>
             
@@ -149,11 +188,7 @@ function EditMap(props){
                     onEdited={_onEdited}
                     onCreated={_onCreated}
                     onDeleted={_onDeleted}
-                    draw={{
-                        rectangle: false,
-                        circle: false,
-                        circlemarker: false
-                    }}
+                    draw={checkTools(type)}
                 />
                 <Circle center={[51.51, -0.06]} radius={200} />
             </FeatureGroup>
@@ -164,7 +199,7 @@ function EditMap(props){
 
                     return ( 
                         <div>
-                        <LayersControl.Overlay name={(list.name)}>
+                        <LayersControl.Overlay name={checkTypeSymbol(list.type)+(list.name)}>
                         <FeatureGroup>
                             <MapComponent data={(list)} key={uuidv4()}/>
                         </FeatureGroup>
