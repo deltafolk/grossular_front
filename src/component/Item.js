@@ -162,7 +162,7 @@ function Item(props){
     if (isLoading) {
         return (
         <div className='pt-5'>
-        <center><div class="loader"></div></center>
+        <center><div className="loader"></div></center>
         <div style={{backgroundColor: "#EEEEEE", height: '100vh'}} className="m-3 text-center h5">กรุณารอสักครุ่...</div>
         </div>
         )
