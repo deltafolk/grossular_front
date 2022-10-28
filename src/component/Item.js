@@ -4,6 +4,7 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { BrowserRouter, Router, Route, Link, Routes } from 'react-router-dom';
 
 import { MapContainer  } from 'react-leaflet/MapContainer'
 import { TileLayer  } from 'react-leaflet/TileLayer'
@@ -13,6 +14,8 @@ import { useMap } from 'react-leaflet/hooks'
 //import { L } from 'leaflet'
 import bbox from 'geojson-bbox';
 import Swal from 'sweetalert2'
+
+import NewMap from './NewMap'
 
 let itemURL = 'http://localhost:7000/item';
 let deleteURL = 'http://localhost:7000/delete';
@@ -138,7 +141,7 @@ function Item(props){
             size="sm"
             id="dropdown-menu-align-end"
           >
-            <Dropdown.Item eventKey="1">สร้างแผนที่ (A4)</Dropdown.Item>
+            <Dropdown.Item eventKey="1" onClick={()=> window.location.href='/newMap/'+idkey}>สร้างแผนที่ (A4)</Dropdown.Item>
             <Dropdown.Item eventKey="2">แก้ไข</Dropdown.Item>
             <Dropdown.Item eventKey="3" onClick={()=>{confirmDelete(idkey)}}>ลบ</Dropdown.Item>
             <Dropdown.Divider />
@@ -216,6 +219,15 @@ function Item(props){
             }
     }
 
+    function createMap(idkey){
+      console.log(idkey)
+      return (
+        <Routes>
+        <NewMap/>
+        </Routes>
+      )
+    }
+
 
     if (isLoading) {
         return (
@@ -269,7 +281,7 @@ function Item(props){
                                     {post.map((list)=>{
                                         //console.log((post))
                                         return (
-                                            <tr key = {uuidv4()} onClick={console.log('555')}>
+                                            <tr key = {uuidv4()} >
                                             <td> <i className="fa fa-circle" style={setColor(list.color)} /></td>
                                             <td> {list.offname} </td>
                                             <td> {checkType(list.type)} {list.actname} {list.amount} {checkTypeUnit(list.type)}</td>

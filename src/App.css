@@ -55,6 +55,12 @@
   overflow-y: scroll;
 }
 
+.overflow {
+  height:450px;
+  overflow-x: scroll;
+}
+
+
 .footer{
   position: fixed;
   left: 0;
@@ -88,4 +94,15 @@
 .fullScreen {
   background-color: "#EEEEEE";
   height: '100%';
+}
+
+.text_l{
+  writing-mode: vertical-rl;
+  text-orientation: use-glyph-orientation;
+}
+.text_r{
+  writing-mode: vertical-rl;
+  text-orientation: use-glyph-orientation;
+  transform: rotate(180deg);
+  display:'inline-grid';
 }
